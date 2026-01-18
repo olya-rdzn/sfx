@@ -4,19 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mikon SFX</title>
-
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="SFX">
   <link rel="apple-touch-icon" href="icon.png">
-
   <script>
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("service-worker.js");
     }
   </script>
-
   <style>
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -65,37 +62,27 @@
   </style>
 </head>
 <body>
-
   <h1>Mikon SFX</h1>
 
   <div class="grid">
     <button onclick="toggle('applause.mp3')">Applause</button>
     <button onclick="toggle('boing.mp3')">Boing</button>
-
     <button onclick="toggle('bobr-kurwa.mp3')">Bobr kurwa</button>
     <button onclick="toggle('boo.mp3')">Booo</button>
-
     <button onclick="toggle('crickets.mp3')">Crickets</button>
     <button onclick="toggle('drumroll.mp3')">Drum roll</button>
-
     <button onclick="toggle('dun-dun-dun.mp3')">ta-ta-TA</button>
     <button onclick="toggle('evillaugh.mp3')">Evil laugh</button>
-
     <button onclick="toggle('eww.mp3')">Eeww</button>
     <button onclick="toggle('goal.mp3')">Goal celebration</button>
-
     <button onclick="toggle('gong.mp3')">Gong</button>
     <button onclick="toggle('laugh.mp3')">Laughter</button>
-
     <button onclick="toggle('ohhh.mp3')">Ohhh</button>
     <button onclick="toggle('ooooh.mp3')">Oooh</button>
-
     <button onclick="toggle('rimshot.mp3')">Ba dum tss</button>
     <button onclick="toggle('scream.mp3')">Scream</button>
-
     <button onclick="toggle('tada.mp3')">Ta-DA</button>
     <button onclick="toggle('wahwah.mp3')">Whah whah whah</button>
-
     <button onclick="toggle('wolf-whistle.mp3')">Wolf whistle</button>
     <button onclick="toggle('wooow.mp3')">Wooow</button>
   </div>
@@ -103,33 +90,26 @@
   <audio id="player"></audio>
 
   <script>
-  const audio = document.getElementById('player');
-  let currentFile = null;
+    const audio = document.getElementById('player');
+    let currentFile = null;
 
-  audio.addEventListener('ended', () => {
-    currentFile = null;
-  });
-
-  function toggle(file) {
-    if (currentFile === file && !audio.paused) {
-      audio.pause();
-      audio.currentTime = 0;
-      currentFile = null;
-      return;
+    function toggle(file) {
+      if (currentFile === file && !audio.paused) {
+        audio.pause();
+        currentFile = null;
+      } else {
+        currentFile = file;
+        audio.src = file;
+        audio.currentTime = 0;
+        audio.play().catch(e => {
+          console.log("Playback issue:", e);
+        });
+      }
     }
 
-    audio.pause();
-    audio.currentTime = 0;
-
-    currentFile = file;
-    audio.src = file;
-    audio.load();
-    audio.play().catch(e => {
-      console.log("Playback issue:", e);
+    audio.addEventListener('ended', () => {
       currentFile = null;
     });
-  }
   </script>
-
 </body>
 </html>
