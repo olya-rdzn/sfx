@@ -65,50 +65,62 @@
   <h1>Mikon SFX</h1>
 
   <div class="grid">
-    <button onclick="toggle('applause.mp3')">Applause</button>
-    <button onclick="toggle('boing.mp3')">Boing</button>
-    <button onclick="toggle('bobr-kurwa.mp3')">Bobr kurwa</button>
-    <button onclick="toggle('boo.mp3')">Booo</button>
-    <button onclick="toggle('crickets.mp3')">Crickets</button>
-    <button onclick="toggle('drumroll.mp3')">Drum roll</button>
-    <button onclick="toggle('dun-dun-dun.mp3')">ta-ta-TA</button>
-    <button onclick="toggle('evillaugh.mp3')">Evil laugh</button>
-    <button onclick="toggle('eww.mp3')">Eeww</button>
-    <button onclick="toggle('goal.mp3')">Goal celebration</button>
-    <button onclick="toggle('gong.mp3')">Gong</button>
-    <button onclick="toggle('laugh.mp3')">Laughter</button>
-    <button onclick="toggle('ohhh.mp3')">Ohhh</button>
-    <button onclick="toggle('ooooh.mp3')">Oooh</button>
-    <button onclick="toggle('rimshot.mp3')">Ba dum tss</button>
-    <button onclick="toggle('scream.mp3')">Scream</button>
-    <button onclick="toggle('tada.mp3')">Ta-DA</button>
-    <button onclick="toggle('wahwah.mp3')">Whah whah whah</button>
-    <button onclick="toggle('wolf-whistle.mp3')">Wolf whistle</button>
-    <button onclick="toggle('wooow.mp3')">Wooow</button>
+    <button data-file="applause.mp3">Applause</button>
+    <button data-file="boing.mp3">Boing</button>
+    <button data-file="bobr-kurwa.mp3">Bobr kurwa</button>
+    <button data-file="boo.mp3">Booo</button>
+    <button data-file="crickets.mp3">Crickets</button>
+    <button data-file="drumroll.mp3">Drum roll</button>
+    <button data-file="dun-dun-dun.mp3">ta-ta-TA</button>
+    <button data-file="evillaugh.mp3">Evil laugh</button>
+    <button data-file="eww.mp3">Eeww</button>
+    <button data-file="goal.mp3">Goal celebration</button>
+    <button data-file="gong.mp3">Gong</button>
+    <button data-file="laugh.mp3">Laughter</button>
+    <button data-file="ohhh.mp3">Ohhh</button>
+    <button data-file="ooooh.mp3">Oooh</button>
+    <button data-file="rimshot.mp3">Ba dum tss</button>
+    <button data-file="scream.mp3">Scream</button>
+    <button data-file="tada.mp3">Ta-DA</button>
+    <button data-file="wahwah.mp3">Whah whah whah</button>
+    <button data-file="wolf-whistle.mp3">Wolf whistle</button>
+    <button data-file="wooow.mp3">Wooow</button>
   </div>
 
   <audio id="player"></audio>
 
   <script>
     const audio = document.getElementById('player');
-    let currentFile = null;
+    let currentButton = null;
 
-    function toggle(file) {
-      if (currentFile === file && !audio.paused) {
-        audio.pause();
-        currentFile = null;
-      } else {
-        currentFile = file;
-        audio.src = file;
-        audio.currentTime = 0;
-        audio.play().catch(e => {
-          console.log("Playback issue:", e);
-        });
-      }
-    }
+    document.querySelectorAll('.grid button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const file = btn.dataset.file;
+
+        if (currentButton === btn && !audio.paused) {
+          audio.pause();
+          audio.src = '';
+          audio.currentTime = 0;
+          currentButton = null;
+        } else {
+          if (currentButton) {
+            currentButton.classList.remove('playing');
+          }
+          currentButton = btn;
+          audio.src = file;
+          audio.currentTime = 0;
+          audio.play().catch(err => {
+            console.log("Play failed:", err);
+          });
+        }
+      });
+    });
 
     audio.addEventListener('ended', () => {
-      currentFile = null;
+      if (currentButton) {
+      }
+      currentButton = null;
+      audio.src = '';
     });
   </script>
 </body>
