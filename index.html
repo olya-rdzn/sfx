@@ -106,6 +106,10 @@
   const audio = document.getElementById('player');
   let currentFile = null;
 
+  audio.addEventListener('ended', () => {
+    currentFile = null;
+  });
+
   function toggle(file) {
     if (currentFile === file && !audio.paused) {
       audio.pause();
@@ -114,15 +118,18 @@
       return;
     }
 
+    audio.pause();
+    audio.currentTime = 0;
+
     currentFile = file;
     audio.src = file;
-    audio.currentTime = 0;
+    audio.load();
     audio.play().catch(e => {
       console.log("Playback issue:", e);
+      currentFile = null;
     });
   }
-</script>
-
+  </script>
 
 </body>
 </html>
