@@ -103,32 +103,37 @@
 
   <script>
     const audio = document.getElementById('player');
-    let currentFile = null;
+    let currentlyPlayingFile = null;
 
     document.querySelectorAll('.grid button').forEach(button => {
       button.addEventListener('click', () => {
         const file = button.getAttribute('data-file');
 
-        // If this file is already playing → just pause it
-        if (currentFile === file && !audio.paused) {
+        // If this exact file is already playing → PAUSE IT AND STOP
+        if (currentlyPlayingFile === file && !audio.paused) {
           audio.pause();
-          currentFile = null; // clear so next click starts fresh
+          // Do NOT change src, do NOT reset time — just silence
           return;
         }
 
-        // Otherwise, load and play this file from start
+        // Otherwise: stop any current playback (even if different file)
+        if (!audio.paused) {
+          audio.pause();
+        }
+
+        // Load and play the new file from start
         audio.src = file;
         audio.currentTime = 0;
         audio.play().catch(e => {
           console.log("Playback failed:", e);
         });
-        currentFile = file;
+        currentlyPlayingFile = file;
       });
     });
 
-    // Clear currentFile when playback ends naturally
+    // When audio ends naturally, clear state
     audio.addEventListener('ended', () => {
-      currentFile = null;
+      currentlyPlayingFile = null;
     });
   </script>
 
