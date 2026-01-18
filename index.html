@@ -103,25 +103,26 @@
   <audio id="player"></audio>
 
   <script>
-    const audio = document.getElementById('player');
-    let currentFile = null;
+  const audio = document.getElementById('player');
+  let currentFile = null;
 
-    function toggle(file) {
-      if (currentFile === file && !audio.paused) {
-        audio.pause();
-        audio.currentTime = 0;
-        currentFile = null;
-        return;
-      }
-
-      currentFile = file;
-      audio.src = file;
+  function toggle(file) {
+    if (currentFile === file && !audio.paused) {
+      audio.pause();
       audio.currentTime = 0;
-      audio.play().catch(e => {
-        console.log("Playback issue:", e);
-      });
+      currentFile = null;
+      return;
     }
-  </script>
+
+    currentFile = file;
+    audio.src = file;
+    audio.currentTime = 0;
+    audio.play().catch(e => {
+      console.log("Playback issue:", e);
+    });
+  }
+</script>
+
 
 </body>
 </html>
