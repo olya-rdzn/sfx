@@ -4,16 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mikon SFX</title>
+  
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="SFX">
-  <link rel="apple-touch-icon" href="icon.png">
   <script>
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("service-worker.js");
     }
   </script>
+  
+  
   <style>
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -62,27 +64,37 @@
   </style>
 </head>
 <body>
+
   <h1>Mikon SFX</h1>
 
   <div class="grid">
     <button data-file="applause.mp3">Applause</button>
     <button data-file="boing.mp3">Boing</button>
+    
     <button data-file="bobr-kurwa.mp3">Bobr kurwa</button>
     <button data-file="boo.mp3">Booo</button>
+    
     <button data-file="crickets.mp3">Crickets</button>
     <button data-file="drumroll.mp3">Drum roll</button>
+    
     <button data-file="dun-dun-dun.mp3">ta-ta-TA</button>
     <button data-file="evillaugh.mp3">Evil laugh</button>
+    
     <button data-file="eww.mp3">Eeww</button>
     <button data-file="goal.mp3">Goal celebration</button>
+    
     <button data-file="gong.mp3">Gong</button>
     <button data-file="laugh.mp3">Laughter</button>
+    
     <button data-file="ohhh.mp3">Ohhh</button>
     <button data-file="ooooh.mp3">Oooh</button>
+    
     <button data-file="rimshot.mp3">Ba dum tss</button>
     <button data-file="scream.mp3">Scream</button>
+    
     <button data-file="tada.mp3">Ta-DA</button>
     <button data-file="wahwah.mp3">Whah whah whah</button>
+    
     <button data-file="wolf-whistle.mp3">Wolf whistle</button>
     <button data-file="wooow.mp3">Wooow</button>
   </div>
@@ -93,35 +105,33 @@
     const audio = document.getElementById('player');
     let currentButton = null;
 
-    document.querySelectorAll('.grid button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const file = btn.dataset.file;
+    document.querySelectorAll('.grid button').forEach(button => {
+      button.addEventListener('click', () => {
+        const file = button.getAttribute('data-file');
 
-        if (currentButton === btn && !audio.paused) {
+        if (currentButton === button && !audio.paused) {
           audio.pause();
-          audio.src = '';
           audio.currentTime = 0;
           currentButton = null;
-        } else {
-          if (currentButton) {
-            currentButton.classList.remove('playing');
+        } 
+        else {
+          if (!audio.paused) {
+            audio.pause();
+            audio.currentTime = 0;
           }
-          currentButton = btn;
           audio.src = file;
-          audio.currentTime = 0;
-          audio.play().catch(err => {
-            console.log("Play failed:", err);
+          audio.play().catch(e => {
+            console.log("Playback issue (file missing or autoplay):", e);
           });
+          currentButton = button;
         }
       });
     });
 
     audio.addEventListener('ended', () => {
-      if (currentButton) {
-      }
       currentButton = null;
-      audio.src = '';
     });
   </script>
+
 </body>
 </html>
