@@ -111,15 +111,14 @@
 
         if (currentButton === button && !audio.paused) {
           audio.pause();
-          audio.currentTime = 0;
           currentButton = null;
         } 
         else {
           if (!audio.paused) {
             audio.pause();
-            audio.currentTime = 0;
           }
           audio.src = file;
+          audio.currentTime = 0;
           audio.play().catch(e => {
             console.log("Playback issue (file missing or autoplay):", e);
           });
