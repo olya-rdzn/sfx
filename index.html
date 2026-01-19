@@ -27,32 +27,11 @@
       flex-direction: column;
       align-items: center;
     }
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin: 20px 0 30px;
-    }
     h1 {
       font-size: 1.6rem;
-      margin: 0;
+      margin: 20px 0 30px;
       font-weight: bold;
       text-shadow: 0 0 8px #ffcc00;
-    }
-    #stop-btn {
-      padding: 8px 16px;
-      font-size: 1rem;
-      background: #ff3333;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.2s;
-    }
-    #stop-btn:hover {
-      background: #ff0000;
-      transform: translateY(-2px);
     }
     .grid {
       display: grid;
@@ -61,7 +40,7 @@
       max-width: 720px;
       width: 100%;
     }
-    button.sound-btn {
+    button {
       padding: 18px;
       font-size: 1.1rem;
       background: #222;
@@ -72,13 +51,13 @@
       transition: all 0.2s;
       font-weight: bold;
     }
-    button.sound-btn:hover {
+    button:hover {
       background: #ffcc00;
       color: #000;
       transform: translateY(-3px);
       box-shadow: 0 8px 16px rgba(255, 204, 0, 0.4);
     }
-    button.sound-btn:active {
+    button:active {
       transform: translateY(1px);
       background: #ffd633;
     }
@@ -86,66 +65,70 @@
 </head>
 <body>
 
-  <div class="header">
-    <h1>Mikon SFX</h1>
-    <button id="stop-btn">⏹ Stop All</button>
-  </div>
+  <h1>Mikon SFX</h1>
 
   <div class="grid">
-    <button class="sound-btn" data-file="applause.mp3">Applause</button>
-    <button class="sound-btn" data-file="boing.mp3">Boing</button>
+    <button data-file="applause.mp3">Applause</button>
+    <button data-file="boing.mp3">Boing</button>
     
-    <button class="sound-btn" data-file="bobr-kurwa.mp3">Bobr kurwa</button>
-    <button class="sound-btn" data-file="boo.mp3">Booo</button>
+    <button data-file="bobr-kurwa.mp3">Bobr kurwa</button>
+    <button data-file="boo.mp3">Booo</button>
     
-    <button class="sound-btn" data-file="crickets.mp3">Crickets</button>
-    <button class="sound-btn" data-file="drumroll.mp3">Drum roll</button>
+    <button data-file="crickets.mp3">Crickets</button>
+    <button data-file="drumroll.mp3">Drum roll</button>
     
-    <button class="sound-btn" data-file="dun-dun-dun.mp3">ta-ta-TA</button>
-    <button class="sound-btn" data-file="evillaugh.mp3">Evil laugh</button>
+    <button data-file="dun-dun-dun.mp3">ta-ta-TA</button>
+    <button data-file="evillaugh.mp3">Evil laugh</button>
     
-    <button class="sound-btn" data-file="eww.mp3">Eeww</button>
-    <button class="sound-btn" data-file="goal.mp3">Goal celebration</button>
+    <button data-file="eww.mp3">Eeww</button>
+    <button data-file="goal.mp3">Goal celebration</button>
     
-    <button class="sound-btn" data-file="gong.mp3">Gong</button>
-    <button class="sound-btn" data-file="laugh.mp3">Laughter</button>
+    <button data-file="gong.mp3">Gong</button>
+    <button data-file="laugh.mp3">Laughter</button>
     
-    <button class="sound-btn" data-file="ohhh.mp3">Ohhh</button>
-    <button class="sound-btn" data-file="ooooh.mp3">Oooh</button>
+    <button data-file="ohhh.mp3">Ohhh</button>
+    <button data-file="ooooh.mp3">Oooh</button>
     
-    <button class="sound-btn" data-file="rimshot.mp3">Ba dum tss</button>
-    <button class="sound-btn" data-file="scream.mp3">Scream</button>
+    <button data-file="rimshot.mp3">Ba dum tss</button>
+    <button data-file="scream.mp3">Scream</button>
     
-    <button class="sound-btn" data-file="tada.mp3">Ta-DA</button>
-    <button class="sound-btn" data-file="wahwah.mp3">Whah whah whah</button>
+    <button data-file="tada.mp3">Ta-DA</button>
+    <button data-file="wahwah.mp3">Whah whah whah</button>
     
-    <button class="sound-btn" data-file="wolf-whistle.mp3">Wolf whistle</button>
-    <button class="sound-btn" data-file="wooow.mp3">Wooow</button>
+    <button data-file="wolf-whistle.mp3">Wolf whistle</button>
+    <button data-file="wooow.mp3">Wooow</button>
   </div>
 
   <audio id="player"></audio>
 
   <script>
     const audio = document.getElementById('player');
-    const stopBtn = document.getElementById('stop-btn');
+    let currentlyPlayingFile = null;
 
-    // Play on sound button click
-    document.querySelectorAll('.sound-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const file = btn.getAttribute('data-file');
+    document.querySelectorAll('.grid button').forEach(button => {
+      button.addEventListener('click', () => {
+        const file = button.getAttribute('data-file');
+
+        if (currentlyPlayingFile === file && !audio.paused) {
+          audio.pause();
+          return;
+        }
+
+        if (!audio.paused) {
+          audio.pause();
+        }
+
         audio.src = file;
         audio.currentTime = 0;
         audio.play().catch(e => {
           console.log("Playback failed:", e);
         });
+        currentlyPlayingFile = file;
       });
     });
 
-    // Stop all audio instantly
-    stopBtn.addEventListener('click', () => {
-      audio.pause(); // Just pause — no reset, no reload
-      // Optional: clear src to prevent accidental resume? Not needed, but safe.
-      // We don't reset currentTime — just silence.
+    audio.addEventListener('ended', () => {
+      currentlyPlayingFile = null;
     });
   </script>
 
